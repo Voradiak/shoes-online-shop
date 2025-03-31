@@ -1,0 +1,28 @@
+{% extends "header.html" %}
+{% block content %}
+{% if cart_items %}
+    <h2>Ваша корзина:</h2>
+{% else %}
+    <h2>Корзина пуста</h2>
+{% endif %}
+<ul class="list-group">
+    {% for item in cart_items %}
+    <a href="{% url 'product_page' item.product.id %}" class="text-decoration-none text-dark">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                <strong>{{ item.product.name }}</strong> 
+            </div>
+            <div>
+                <a href="{% url 'increase_quantity' item.id %}" class="btn btn-primary rounded-circle">+</a> 
+                <strong>{{ item.quantity }} шт.</strong>
+                <a href="{% url 'decrease_quantity' item.id %}" class="btn btn-primary rounded-circle">-</a> 
+                <strong>Итого: {{ item.total_price }} $</strong>
+                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger">Удалить из корзины</a>
+            </div>
+        </li>
+    </a>
+    {% endfor %}
+</ul>
+<p>Итого: {{ total_price }} $</p>
+{% endblock %}

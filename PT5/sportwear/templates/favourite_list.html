@@ -1,0 +1,23 @@
+{% extends "header.html" %}
+{% block content %}
+<h2>Избранные товары</h2>
+<ul class="list-group">
+    {% if  not favourites %}
+        <li class="list-group-item">Нет избранных товаров</li>
+    {% else %}
+        {% for favourite in favourites %}
+            <a href="{% url 'product_page' favourite.product.id %}" class="text-decoration-none text-dark">
+                <li class="list-group-item d-flex justify-content-between align-items-center flex-row" style="width: 100%;">
+                    <div>
+                        <img src="{{ favourite.product.image.url }}" alt="{{ favourite.product.name }}" width="100" height="100">
+                        <strong>{{ favourite.product.name }}</strong> - {{ favourite.product.price }}$
+                    </div>
+                    <div>    
+                        <a href="{% url 'add_to_cart' favourite.product.id %}" class="btn btn-outline-success">Добавить в корзину</a> | <a href="{% url 'favourite_remove' favourite.id %}" class="btn btn-danger">Удалить из избранного</a>
+                    </div>
+                </li>
+            </a>
+        {% endfor %}
+    {% endif %}
+</ul>
+{% endblock %}

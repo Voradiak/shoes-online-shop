@@ -1,0 +1,10 @@
+{% extends "header.html" %}
+{% block content %}
+    <h2>Регистрация</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Зарегестрироваться</button>
+    </form>
+    Уже зарегестрированы? <a href="{% url 'login' %}">Войти</a>
+{% endblock %}

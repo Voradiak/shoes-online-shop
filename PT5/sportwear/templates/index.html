@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sportwear</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        header {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 80px;
+            align-items: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: row;
+            width: 50%;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: row;
+            width: 35%;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .auth {
+            display: flex;
+            flex-direction: row;
+            width: 35%;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        header > div > a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .main-image {
+            width: 90%;
+        }
+        
+        .logo-block {
+            display: flex;
+            flex-direction: row;
+            height: 200px;
+            margin-top: 20px;
+        }
+        
+        .brand-logo {
+            width: 20%;
+        }
+        
+        .button-block {
+            display: flex;
+            justify-content: center;
+        }
+        
+        button > a {
+            text-decoration: none;
+            color: white;
+        }
+        
+        button {
+            background-color: rgb(72, 72, 180);
+            border-radius: 45px;
+            border: none;
+        }
+        
+        p {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header bg-primary mb-2 d-flex justify-content-between align-items-center">
+        <div class="nav-menu">
+            <a href="{% url 'index' %}"><h2>Главная</h2></a>
+            <a href="{% url 'products' %}"><h2>Товары</h2></a>
+            <a href="{% url 'about' %}"><h2>О нас</h2></a>
+            <a href="{% url 'contacts' %}"><h2>Контакты</h2></a>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="profile">
+            <div>
+                <a class="btn btn-outline-light" href="{% url 'favourite_list' %}">Избранное</a> | <a class="btn btn-success" href="{% url 'cart_detail' %}">Корзина</a> 
+            </div>
+            <h2> {{ user.username }} </h2>
+            <a href="{% url 'logout' %}" class="btn btn-danger">Выйти</a>
+        </div>
+        {% else %}
+        <div class="auth">
+            <div>
+                <a href="{% url 'login' %}" class="btn btn-success">Войти</a> | <a href="{% url 'register' %}" class="text-decoration-none text-white">Зарегистрироваться</a>
+            </div>
+        </div>
+        {% endif %}
+    </header>
+    <div class="main">
+        <h1>Беги к своей мечте вместе с нами</h1>
+        <img src="{% static "images/main_image1.png" %}" class="main-image">
+        <p>Лучшая обувь для повседневной жизни, бега, футбола, баскетбола, волейбола и многих других видов спорта только у нас</p>
+        <p>Сотрудничаем только с официальными брендами. Такими как: </p>
+        <div class="logo-block">
+            <img src="{% static "images/nike_logo.png" %}" alt="nike logo" class="brand-logo">
+            <img src="{% static "images/adidas_logo.png" %}" alt="adidas logo" class="brand-logo">
+            <img src="{% static "images/asics-logo.png" %}" alt="asics logo" class="brand-logo">
+            <img src="{% static "images/mizuno-logo.png" %}" alt="mizuno logo" class="brand-logo">
+            <img src="{% static "images/nb-logo.png" %}" alt="nb logo" class="brand-logo">
+        </div>
+        <div class="button-block">
+            <button type="button" class="btn btn-primary rounded-pill">
+                <a href="{% url 'products' %}"><h3>Заказывай сейчас</h3></a>
+            </button>
+        </div>    
+    </div>
+</body>
+</html>
