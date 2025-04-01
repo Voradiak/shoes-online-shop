@@ -130,10 +130,10 @@ def favourite_remove(request, favourite_id):
     favourite.delete()
     return redirect('favourite_list')
 
-def product_page(request, product_id):
-    product = get_object_or_404(Shoe, id=product_id)
+def product_page(request, product_slug):
+    product = get_object_or_404(Shoe, slug=product_slug)  # Поиск по slug
     comments = product.comments.all()
-    
+
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -142,13 +142,14 @@ def product_page(request, product_id):
             comment.product = product
             comment.save()
             messages.success(request, 'Ваш комментарий добавлен')
-            return redirect('product_page', product_id=product.id)
+            return redirect('product_page', product_slug=product.slug)
     else:
         form = CommentForm()
+
     return render(request, 'product_page.html', {
-        'product': product, 
-        'comments': comments, 
-        'form': form
+        'product': product,
+        'comments': comments,
+        'form': form,
     })
     
 @staff_member_required

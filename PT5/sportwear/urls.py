@@ -18,6 +18,6 @@ urlpatterns = [
     path('favourites/remove/<int:favourite_id>/', favourite_remove, name='favourite_remove'),
     path('cart/decrease/<int:cart_id>/', decrease_quantity, name='decrease_quantity'),
     path('cart/increase/<int:cart_id>/', increase_quantity, name='increase_quantity'),
-    path('products/<int:product_id>/', product_page, name='product_page'),
+    path('products/<slug:product_slug>/', product_page, name='product_page'),
     path('comments/delete/<int:comment_id>/', delete_comment, name='delete_comment'),
 ]

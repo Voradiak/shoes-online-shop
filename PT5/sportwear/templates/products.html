@@ -2,7 +2,7 @@
 {% block content %}
     <div style="width: 100%;" class="d-flex justify-content-start pt-3 flex-wrap">
         {% for shoe in page_obj %}
-        <a href="{% url 'product_page' shoe.id %}" class="text-decoration-none text-dark">
+        <a href="{% url 'product_page' shoe.slug %}" class="text-decoration-none text-dark">
             <div class="card mx-3 p-3 m-3" style="width: 21rem;">
                 <img src="{{ shoe.image.url }}" alt="shoe" class="card-img-top" style="width: 300px; height: 300px;">
                 <h2 style="width: 15.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ shoe.name }}</h2>

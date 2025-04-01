@@ -16,6 +16,7 @@ class Shoe(models.Model):
     name = models.CharField(max_length=50, blank=False)
     price = models.IntegerField(blank=False)
     description = models.TextField(blank=True)
+    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name='URL')
     
     def __str__(self) -> str:
         return f'{self.name}  {self.price}$' 
