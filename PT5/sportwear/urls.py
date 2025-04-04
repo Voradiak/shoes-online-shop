@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import register, user_login, logout_view, contacts_page, about_page, index_page, delete_comment
-from .views import products_page, add_to_cart, remove_from_cart, add_to_favourites, cart_detail, favourite_list, favourite_remove, decrease_quantity, increase_quantity, product_page
+from .views import products_page, add_to_cart, remove_from_cart, add_to_favourites, cart_detail, favourite_list, favourite_remove, decrease_quantity, increase_quantity, product_page, update_cart_quantity
 
 urlpatterns = [
     path('', index_page, name='index'),
@@ -10,7 +10,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('contacts/', contacts_page, name='contacts'),
     path('about/', about_page, name='about'),
-    path('favourites/<int:product_id>/', add_to_favourites, name='add_to_favourites'),
+    path('favourites/<slug:product_slug>/', add_to_favourites, name='add_to_favourites'),
     path('cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
     path('cart/remove/<int:cart_id>/', remove_from_cart, name='remove_from_cart'),
     path('cart/', cart_detail, name='cart_detail'),
@@ -20,4 +20,5 @@ urlpatterns = [
     path('cart/increase/<int:cart_id>/', increase_quantity, name='increase_quantity'),
     path('products/<slug:product_slug>/', product_page, name='product_page'),
     path('comments/delete/<int:comment_id>/', delete_comment, name='delete_comment'),
+    path('cart/update/<int:cart_id>/', update_cart_quantity, name='update_cart_quantity'),
 ]

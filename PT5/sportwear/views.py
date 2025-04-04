@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -8,6 +8,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from .forms import CommentForm
 from django.core.paginator import Paginator
 from .models import Comment, Shoe, Favourite, Cart
+import json
 
 def register(request):
     if request.method == 'POST':
@@ -131,7 +132,7 @@ def favourite_remove(request, favourite_id):
     return redirect('favourite_list')
 
 def product_page(request, product_slug):
-    product = get_object_or_404(Shoe, slug=product_slug)  # Поиск по slug
+    product = get_object_or_404(Shoe, slug=product_slug)
     comments = product.comments.all()
 
     if request.method == 'POST':
@@ -158,4 +159,22 @@ def delete_comment(request, comment_id):
     comment.delete()
     messages.success(request, 'Комментарий успешно удален.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def update_cart_quantity(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            quantity = int(data.get('quantity', 1))
+            if quantity > 0:
+                cart_item.quantity = quantity
+                cart_item.save()
+                return JsonResponse({'success': True, 'total_price': cart_item.total_price()})
+            else:
+                cart_item.delete()
+                return JsonResponse({'success': True, 'deleted': True})
+        except (ValueError, KeyError):
+            return JsonResponse({'success': False, 'error': 'Invalid input'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 # Create your views here.

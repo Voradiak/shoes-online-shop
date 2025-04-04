@@ -6,7 +6,7 @@
         <li class="list-group-item">Нет избранных товаров</li>
     {% else %}
         {% for favourite in favourites %}
-            <a href="{% url 'product_page' favourite.product.id %}" class="text-decoration-none text-dark">
+            <a href="{% url 'product_page' favourite.product.slug %}" class="text-decoration-none text-dark">
                 <li class="list-group-item d-flex justify-content-between align-items-center flex-row" style="width: 100%;">
                     <div>
                         <img src="{{ favourite.product.image.url }}" alt="{{ favourite.product.name }}" width="100" height="100">

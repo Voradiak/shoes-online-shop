@@ -5,24 +5,85 @@
 {% else %}
     <h2>Корзина пуста</h2>
 {% endif %}
-<ul class="list-group">
-    {% for item in cart_items %}
-    <a href="{% url 'product_page' item.product.id %}" class="text-decoration-none text-dark">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="width: 100px; height: 100px;">
-                <strong>{{ item.product.name }}</strong> 
-            </div>
-            <div>
-                <a href="{% url 'increase_quantity' item.id %}" class="btn btn-primary rounded-circle">+</a> 
-                <strong>{{ item.quantity }} шт.</strong>
-                <a href="{% url 'decrease_quantity' item.id %}" class="btn btn-primary rounded-circle">-</a> 
-                <strong>Итого: {{ item.total_price }} $</strong>
-                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger">Удалить из корзины</a>
-            </div>
-        </li>
-    </a>
-    {% endfor %}
-</ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Количество</th>
+            <th>Цена</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>
+                <a href="{% url 'product_page' item.product.slug %}" class="text-decoration-none text-dark">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="100" height="100" >
+                    <strong>{{ item.product.name }}</strong> - {{ item.product.price }}$
+                </a>
+            </td>
+            <td>
+                <div class="input-group">
+                    <button class="btn btn-outline-secondary decrease-btn" data-id="{{ item.id }}">-</button>
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control text-center quantity-input" data-id="{{ item.id }}" style="max-width: 80px;">
+                    <button class="btn btn-outline-secondary increase-btn" data-id="{{ item.id }}">+</button>
+                </div>
+            </td>
+            <td>${{ item.total_price }}</td>
+            <td>
+                <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 <p>Итого: {{ total_price }} $</p>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const csrfToken = '{{ csrf_token }}';
+
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', function () {
+                const cartId = this.dataset.id;
+                const quantity = this.value;
+
+                fetch(`/cart/update/${cartId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ quantity: quantity })
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.decrease-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const input = document.querySelector(`.quantity-input[data-id="${this.dataset.id}"]`);
+                if (input.value > 1) {
+                    input.value = parseInt(input.value) - 1;
+                    input.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
+        document.querySelectorAll('.increase-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const input = document.querySelector(`.quantity-input[data-id="${this.dataset.id}"]`);
+                input.value = parseInt(input.value) + 1;
+                input.dispatchEvent(new Event('change'));
+            });
+        });
+    });
+</script>
 {% endblock %}
